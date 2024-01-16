@@ -1,0 +1,65 @@
+---
+- name: adding alias in bashrc file
+  ansible.builtin.lineinfile:
+    path: /root/.bashrc
+    line: "{{ item }}"
+    insertafter: EOF
+    state: present
+  loop:
+   - "alias python='/usr/bin/python3'"
+   - "alias pip='/usr/bin/pip3'"
+
+- name: sourcing the /root/.bashrc file
+  shell: |
+    python --version
+    pip --version
+    source ~/.bashrc
+    pip install pip --upgrade
+  
+
+- name: Disabling SELinux state
+  selinux:
+    state: disabled
+
+- name: Stop and disable firewalld.
+  service:
+    name: firewalld
+    state: stopped
+    enabled: False
+
+- name: Removing python-docker-py
+  yum:
+    name: python-docker-py
+    state: absent
+
+- name: Install packages 
+  yum:
+    state: present 
+    name: >
+      epel-release,
+      yum-utils,
+      device-mapper-persistent-data,
+      lvm2,
+      ansible,
+      git,
+      python-devel,
+      python-pip,
+      python-docker-py,
+      vim-enhanced
+
+- name: Install python package
+  pip:
+    name: '{{ item }}'
+    executable: pip3
+  loop:
+    - cryptography
+    - jsonschema
+    - docker-compose
+    - docker
+
+- name: Reboot
+  ansible.builtin.reboot:
+
+
+
+

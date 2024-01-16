@@ -1,0 +1,7 @@
+---
+ - hosts: "{{ target }}"
+   remote_user: opcitoadmin
+   become: yes
+   become_user: root
+   roles:
+     - { role: awx , when: component == "awx" }

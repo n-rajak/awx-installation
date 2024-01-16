@@ -1,0 +1,3 @@
+---
+# defaults file for awx-installation
+awx_password: "admin@123"

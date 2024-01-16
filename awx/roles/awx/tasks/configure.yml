@@ -1,0 +1,23 @@
+---
+- name: Operations In AWX container
+  shell: |
+    docker ps -a
+    container_awxtask=$(docker ps | awk 'NR==2 {print $1}')
+    docker exec -it $container_awxtask bash -c "pip3 install setuptools_rust && pip3 install --upgrade pip && pip3 install oci" 
+    docker exec -it $container_awxtask bash -c "whoami && ansible-galaxy collection install community.mysql"
+    docker exec -it $container_awxtask bash -c "cd /var/lib/awx/venv/ansible/bin/ && chmod 755 activate && source ./activate && pip3 install jinja2 --upgrade && sed -i 's|#remote_tmp     = ~/.ansible/tmp|remote_tmp     = /tmp|g' /etc/ansible/ansible.cfg"
+    container_awxweb=$(docker ps | awk 'NR==2 {print $1}')
+    docker exec -it $container_awxweb bash -c "sed -i 's/: 25/: 50/g' /var/lib/awx/venv/awx/lib/python3.6/site-packages/awx/settings/defaults.py"
+  register: docker_out
+
+
+- name: Output of shell
+  debug:
+    msg: "{{ docker_out.stdout.split('\n') }}" 
+
+
+- name: Reload service httpd, in all cases
+  ansible.builtin.systemd:
+    name: docker
+    state: restarted
+    enabled: yes

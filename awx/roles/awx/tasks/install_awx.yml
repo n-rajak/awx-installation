@@ -1,0 +1,29 @@
+---
+- name: Git checkout
+  ansible.builtin.git:
+    repo: 'https://github.com/ansible/awx.git'
+    dest: /opt/awx
+    version: 17.1.0
+    update: no
+
+- name: Editing the inventory file
+  command: '{{ item }}'
+  args:
+    chdir: /opt/awx/installer/
+  loop: 
+    - sed -i "s|# admin_password=password|admin_password='{{ awx_password }}'|g" inventory
+    - sed -i "s|# awx_official=false|awx_official=true|g" inventory
+
+- name: Running the playbook for awx installation
+  command: ansible-playbook -i inventory install.yml -vv
+  args:
+    chdir: /opt/awx/installer/
+
+- name: Checking the installation
+  shell: |
+    docker ps -a
+  register: docker_out
+
+- name: Display the output
+  debug:
+    msg: '{{ docker_out.stdout }}'
