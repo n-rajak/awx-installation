@@ -5,7 +5,7 @@ on:
   # trigger the workflow on push event for specified branch
   push:
     branches:
-      - SDT-35-build-execution-environments-image-sdt-dev
+      - build-awx-image-via-ansible-builder
   #   paths:
   #     - 'sdt/**'
   # # Schedule workflow run at 00:00 on sunday
