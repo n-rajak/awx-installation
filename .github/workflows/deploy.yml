@@ -25,6 +25,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          
       - name: Install Docker
         run: |
           sudo docker --version
@@ -39,8 +40,8 @@ jobs:
       #     ansible-builder build \
       #     --tag=${{ inputs.EE_FOLDER_NAME }}:${{ inputs.EE_IMAGE_TAG }} -v 3
       
-      - name echo variable
-        run: echo "${{ vars.DOCKER_REGISTRY_USERNAME}}"
+      - name: echo variable
+        run: echo "${{ secrets.DOCKER_REGISTRY}}"
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
