@@ -1,0 +1,23 @@
+# workflow name
+name: SDT RHEL EE BUILD 
+# controls when the workflow will run
+on:
+  # trigger the workflow on push event for specified branch
+  push:
+    branches:
+      - SDT-35-build-execution-environments-image-sdt-dev
+  #   paths:
+  #     - 'sdt/**'
+  # # Schedule workflow run at 00:00 on sunday
+  # schedule:
+  #     - cron: '0 0 * * 0'
+  # # Allow to run this workflow manually from the action tab
+  # workflow_dispatch:
+
+# A workflow run is made up of one or more jobs taht can run sequentially or in parallel
+jobs:
+  useCallable:
+    uses: ./.github/workflows/deploy.yml
+    with: 
+      EE_FOLDER_NAME: 'awx-images/rhel'
+      EE_IMAGE_TAG: 'latest'
