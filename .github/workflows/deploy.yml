@@ -48,7 +48,7 @@ jobs:
         with:
           username: ${{vars.DOCKER_REGISTRY_USERNAME}}
         env:
-          password: ${{secrets.DOCKER_REGISTRY_PASS}}
+          password: neel@32##12$
 
       # - name: Tag ansible builder image 
       #   run: docker tag ${{ inputs.EE_FOLDER_NAME }}:${{ inputs.EE_IMAGE_TAG }} $(DOCKER_REGISTRY)/${{ inputs.EE_FOLDER_NAME }}:${{ inputs.EE_IMAGE_TAG }}
