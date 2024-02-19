@@ -1,0 +1,4 @@
+ansible-builder==3.0.0
+PyYAML
+requirements-parser
+bindep
