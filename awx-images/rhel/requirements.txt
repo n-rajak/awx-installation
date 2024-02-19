@@ -1,0 +1,12 @@
+# Provides Python requirements
+ansible==2.10.0
+jinja2==2.11.2
+MarkupSafe==2.0.1
+ansible-cmdb==1.31
+# molecule==3.5.2 (requires Jinja 2.11.3, beed to upgrade jinja for molecule 3.5.2)
+ansible-autodoc==0.5.3
+ansible-lint==5.3.1
+yamllint==1.26.3
+pre-commit==1.21.0
+pywinrm==0.4.2
+jmespath==0.10.0

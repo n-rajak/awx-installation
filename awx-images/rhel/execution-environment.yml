@@ -1,0 +1,20 @@
+---
+# Execution environment for SDT
+# Version
+version: 1
+
+# Base Execution Environment name with tag
+build_arg_defaults:
+  EE_BASE_IMAGE: 'quay.io/ansible/ansible-runner:latest'
+
+# Dependencies that needs to be installed
+dependencies:
+  # galaxy: requirements.yml
+  python: requirements.txt
+  # system: bindep.txt
+
+# additional_build_steps:
+#   prepend: |
+#     RUN cat 
+#     RUN yum upadte -y
+#     RUN pip3 install --upgrade pip setuptools
