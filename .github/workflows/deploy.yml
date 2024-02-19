@@ -18,13 +18,19 @@ on:
 # A workflow run is made up of one or more jobs taht can run sequentially or in parallel
 jobs:
   build-ee:
-    runs-on: 7772090167/nrajak-images:ubuntu_v1
+    runs-on: ubuntu-latest
     environment: test
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Install Docker
+        run: |
+          sudo docker --version
+          
+      - name: Install python requirements(ansible-builder)
+        run: pip install -r requirements.txt
 
       - name: Install Docker
         run: |
@@ -33,10 +39,6 @@ jobs:
           sudo systemctl start docker
           sudo systemctl enable docker
           sudo docker --version
-
-      - name: Install python requirements(ansible-builder)
-        run: pip install -r requirements.txt
-
       - name: Build image
         id: build-image 
         working-directory: ${{ inputs.EE_FOLDER_NAME }}
