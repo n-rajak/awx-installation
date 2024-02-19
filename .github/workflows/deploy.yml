@@ -50,8 +50,11 @@ jobs:
       #     username: ${{vars.DOCKER_REGISTRY_USERNAME}}
       #     password: ${{ secrets.REPOSECRATE }}
 
+      # - name: Log in to Docker Hub
+      #   run: echo "${{ secrets.REPOSECRATE }}" | docker login -u ${{vars.DOCKER_REGISTRY_USERNAME}} --password-stdin
+
       - name: Log in to Docker Hub
-        run: echo "${{ secrets.REPOSECRATE }}" | docker login -u ${{vars.DOCKER_REGISTRY_USERNAME}} --password-stdin
+        run: docker login -u ${{vars.DOCKER_REGISTRY_USERNAME}} -p ${{ secrets.REPOSECRATE }}
 
       - name: Build and push docker image to nexus registry
         id: build-image 
