@@ -75,5 +75,3 @@ jobs:
       - name: login to docker registry
         working-directory: awx-images/rhel
         run: make login
-        env: 
-          VERSION=${{ env.VERSION }}
