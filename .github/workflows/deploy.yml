@@ -3,32 +3,32 @@ name: EE build
 # Controls when the workflow will run
 on:
   # This is a reusable workflow
-  workflow_call:
-    inputs:
-      EE_FOLDER_NAME:
-        description: 'name of the folder where the EE is located'
-        default: ''
-        required: true
-        type: string
-      EE_IMAGE_TAG:
-        description: 'tag for image build'
-        default: 'latest'
-        required: true
-        type: string
+  push: 
+    branches:
+     - 'build-awx-image-via-ansible-builder'
+  # workflow_call:
+  #   inputs:
+  #     EE_FOLDER_NAME:
+  #       description: 'name of the folder where the EE is located'
+  #       default: ''
+  #       required: true
+  #       type: string
+  #     EE_IMAGE_TAG:
+  #       description: 'tag for image build'
+  #       default: 'latest'
+  #       required: true
+  #       type: string
 
 # A workflow run is made up of one or more jobs taht can run sequentially or in parallel
 jobs:
   build-ee:
     runs-on: ubuntu-latest
-    environment: test
     env:
       COMMIT_ID: ${{ github.commit-id }}
       VERSION: ${{ github.run_number }}
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v3
 
       # - name: Install Docker
       #   run: |
