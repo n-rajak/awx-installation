@@ -75,4 +75,4 @@ jobs:
       - name: login to docker registry
         run: |
           cd awx-images/rhel
-          VERSION=${{ env.VERSION }} DOCKER_REGISTRY_PASSWORD=${{ secrets.REPOSECRATE }} make push
+          VERSION=${{ env.VERSION }} make push
