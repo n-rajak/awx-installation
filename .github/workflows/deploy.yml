@@ -20,16 +20,18 @@ on:
 jobs:
   build-ee:
     runs-on: ubuntu-latest
-    environment: test
+    env:
+      COMMIT_ID: ${{ github.event.inputs.commit-id }}
+      VERSION: ${{ github.event.inputs.version }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - name: Install Docker
-        run: |
-          sudo docker --version
+      # - name: Install Docker
+      #   run: |
+      #     sudo docker --version
           
       # - name: Install python requirements(ansible-builder)
       #   run: pip install -r requirements.txt
@@ -41,8 +43,14 @@ jobs:
       #     ansible-builder build \
       #     --tag=${{ inputs.EE_FOLDER_NAME }}:${{ inputs.EE_IMAGE_TAG }} -v 3
       
-      - name: echo variable
-        run: echo "${{vars.DOCKER_REGISTRY_USERNAME}}"
+      - name: echo variable COMMIT_ID
+        run: echo "${{ env.COMMIT_ID }}"
+
+      - name: echo variable version
+        run: echo "${{ env.VERSION }}"
+
+      - name: echo variable REPOSECRATE
+        run: echo "${{ secrets.REPOSECRATE }}"
 
       # - name: Log in to Docker Hub
       #   uses: docker/login-action@v2
@@ -53,13 +61,18 @@ jobs:
       # - name: Log in to Docker Hub
       #   run: echo "${{ secrets.REPOSECRATE }}" | docker login -u ${{vars.DOCKER_REGISTRY_USERNAME}} --password-stdin
 
-      - name: Log in to Docker Hub
-        run: docker login -u ${{vars.DOCKER_REGISTRY_USERNAME}} -p ${{ secrets.REPOSECRATE }}
+      # - name: Log in to Docker Hub
+      #   run: docker login -u ${{vars.DOCKER_REGISTRY_USERNAME}} -p ${{ secrets.REPOSECRATE }}
 
-      - name: Build and push docker image to nexus registry
-        id: build-image 
-        working-directory: ${{ inputs.EE_FOLDER_NAME }}
+      # - name: Build and push docker image to nexus registry
+      #   id: build-image 
+      #   working-directory: ${{ inputs.EE_FOLDER_NAME }}
+      #   run: |
+      #     ansible-builder build --tag=${{ inputs.EE_FOLDER_NAME }}:${{ inputs.EE_IMAGE_TAG }} -v 3
+      #     docker tag ${{ inputs.EE_FOLDER_NAME }}:${{ inputs.EE_IMAGE_TAG }} $(vars.DOCKER_REGISTRY)/${{ inputs.EE_FOLDER_NAME }}:${{ inputs.EE_IMAGE_TAG }}
+      #     docker push $(vars.DOCKER_REGISTRY)/${{ inputs.EE_FOLDER_NAME }}:${{ inputs.EE_IMAGE_TAG }}
+
+      - name: login to docker registry
         run: |
-          ansible-builder build --tag=${{ inputs.EE_FOLDER_NAME }}:${{ inputs.EE_IMAGE_TAG }} -v 3
-          docker tag ${{ inputs.EE_FOLDER_NAME }}:${{ inputs.EE_IMAGE_TAG }} $(vars.DOCKER_REGISTRY)/${{ inputs.EE_FOLDER_NAME }}:${{ inputs.EE_IMAGE_TAG }}
-          docker push $(vars.DOCKER_REGISTRY)/${{ inputs.EE_FOLDER_NAME }}:${{ inputs.EE_IMAGE_TAG }}
+          cd awx-images/rhel
+          VERSION=${{ env.VERSION }} DOCKER_REGISTRY_PASSWORD=${{ secrets.REPOSECRATE }} make push
