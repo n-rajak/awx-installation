@@ -65,7 +65,7 @@ jobs:
       #   run: docker login -u ${{vars.DOCKER_REGISTRY_USERNAME}} -p ${{ secrets.REPOSECRATE }}
 
       - name: Log in to Docker Hub
-        run: echo ${{ secrets.REPOSECRATE }} | docker login --username ${{ secrets.DOCKER_REGISTRY_USERNAME }} --password-stdin
+        run: echo ${{ secrets.REPOSECRATE }} | docker login --username ${{ vars.DOCKER_REGISTRY_USERNAME }} --password-stdin
 
 
 
