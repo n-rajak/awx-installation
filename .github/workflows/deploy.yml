@@ -20,6 +20,7 @@ on:
 jobs:
   build-ee:
     runs-on: ubuntu-latest
+    environment: test
     env:
       COMMIT_ID: ${{ github.commit-id }}
       VERSION: ${{ github.run_number }}
