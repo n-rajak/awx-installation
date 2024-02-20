@@ -51,7 +51,7 @@ jobs:
         run: echo "${{ env.VERSION }}"
 
       - name: echo variable REPOSECRATE
-        run: echo "${{ secrets.REPOSECRATE }}"
+        run: echo "${{ secrets.SuperSecret }}"
 
       # - name: Log in to Docker Hub
       #   uses: docker/login-action@v2
@@ -66,7 +66,7 @@ jobs:
       #   run: docker login -u ${{vars.DOCKER_REGISTRY_USERNAME}} -p ${{ secrets.REPOSECRATE }}
 
       - name: Log in to Docker Hub
-        run: docker login --username ${{ vars.DOCKER_REGISTRY_USERNAME }} --password '${{ secrets.REPOSECRATE }}'
+        run: docker login --username ${{ vars.DOCKER_REGISTRY_USERNAME }} --password ${{ secrets.SuperSecret }}
 
 
 
