@@ -18,4 +18,8 @@ jobs:
         run: |
           git fetch --tags
           latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
-          echo "::set-output name=latest_tag::$latest_tag"
+          echo "name=latest_tag=$latest_tag" >>$GITHUB_OUTPUT
+
+      - name: Get Tag Name
+        id: get_tag_name
+        run: echo "name=tag_name=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
