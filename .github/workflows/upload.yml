@@ -14,15 +14,15 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
         
-      - name: Clone Release
-        run: |
-          # Get the name of the latest release
-          latest_release=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/latest" | jq -r ".tag_name")
-          echo $latest_release
-          # Clone the repository with the latest release
-          git clone --branch $latest_release --depth 1 https://github.com/${GITHUB_REPOSITORY}.git
-          ls -alh
-          pwd
+      # - name: Clone Release
+      #   run: |
+      #     # Get the name of the latest release
+      #     latest_release=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/latest" | jq -r ".tag_name")
+      #     echo $latest_release
+      #     # Clone the repository with the latest release
+      #     git clone --branch $latest_release --depth 1 https://github.com/${GITHUB_REPOSITORY}.git
+      #     ls -alh
+      #     pwd
 
       # - name: Checkout Repository
       #   uses: actions/checkout@v2
@@ -34,22 +34,24 @@ jobs:
       #     username: ${{ secrets.NEXUS_USERNAME }}
       #     password: ${{ secrets.NEXUS_PASSWORD }}
 
-      # - name: Fetch Release or Tag Artifacts
-      #   id: fetch_artifacts
-      #   run: |
-      #     if [[ -n "${GITHUB_REF##refs/tags/*}" ]]; then
-      #       # This is a release
-      #       mkdir release_artifacts
-      #       for asset in $(jq -r '.release.assets[].browser_download_url' $GITHUB_EVENT_PATH); do
-      #         wget -P release_artifacts $asset
-      #       done
-      #       ARTIFACTS_DIR="release_artifacts"
-      #     else
-      #       # This is a tag
-      #       ARTIFACTS_DIR="."
-      #       git archive -o tag_artifacts.zip --format=zip HEAD
-      #     fi
-      #     echo "name=artifacts_dir=$ARTIFACTS_DIR" >>$GITHUB_OUTPUT
+      - name: Fetch Release or Tag Artifacts
+        id: fetch_artifacts
+        run: |
+          if [[ -n "${GITHUB_REF##refs/tags/*}" ]]; then
+            # This is a release
+            mkdir release_artifacts
+            for asset in $(jq -r '.release.assets[].browser_download_url' $GITHUB_EVENT_PATH); do
+              wget -P release_artifacts $asset
+            done
+            ARTIFACTS_DIR="release_artifacts"
+          else
+            # This is a tag
+            ARTIFACTS_DIR="."
+            git archive -o tag_artifacts.zip --format=zip HEAD
+          fi
+          echo "name=artifacts_dir=$ARTIFACTS_DIR" >>$GITHUB_OUTPUT
+          ls -alh
+          pwd
 
       # - name: Push Artifacts to Nexus
       #   run: |
