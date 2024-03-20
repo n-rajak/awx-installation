@@ -1,7 +1,9 @@
-name: Push Tag Artifacts to Nexus
+name: Push Release and Tag Artifacts to Nexus
 
 on:
-  create:
+  release:
+    types: [created]
+  push:
     tags:
       - '*'
 
@@ -35,7 +37,7 @@ jobs:
             ARTIFACTS_DIR="."
             git archive -o tag_artifacts.zip --format=zip HEAD
           fi
-          echo "::set-output name=artifacts_dir::$ARTIFACTS_DIR"
+          echo "name=artifacts_dir=$ARTIFACTS_DIR" >>$GITHUB_OUTPUT
 
       # - name: Push Artifacts to Nexus
       #   run: |
@@ -46,7 +48,7 @@ jobs:
       #     NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
       #     NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
 
-      
+
       # - name: Checkout Repository
       #   uses: actions/checkout@v2
 
