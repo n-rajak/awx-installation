@@ -13,13 +13,50 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Get Latest Tag
-        id: get_latest_tag
-        run: |
-          git fetch --tags
-          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
-          echo "name=latest_tag=$latest_tag" >>$GITHUB_OUTPUT
+      # - name: Set up Nexus CLI
+      #   uses: igor-shevchenko/nexus-cli-action@v1
+      #   with:
+      #     nexus-url: ${{ secrets.NEXUS_URL }}
+      #     username: ${{ secrets.NEXUS_USERNAME }}
+      #     password: ${{ secrets.NEXUS_PASSWORD }}
 
-      - name: Get Tag Name
-        id: get_tag_name
-        run: echo "name=tag_name=${GITHUB_REF/refs\/tags\//}" >>$GITHUB_OUTPUT
+      - name: Fetch Release or Tag Artifacts
+        id: fetch_artifacts
+        run: |
+          if [[ -n "${GITHUB_REF##refs/tags/*}" ]]; then
+            # This is a release
+            mkdir release_artifacts
+            for asset in $(jq -r '.release.assets[].browser_download_url' $GITHUB_EVENT_PATH); do
+              wget -P release_artifacts $asset
+            done
+            ARTIFACTS_DIR="release_artifacts"
+          else
+            # This is a tag
+            ARTIFACTS_DIR="."
+            git archive -o tag_artifacts.zip --format=zip HEAD
+          fi
+          echo "::set-output name=artifacts_dir::$ARTIFACTS_DIR"
+
+      # - name: Push Artifacts to Nexus
+      #   run: |
+      #     cd ${{ steps.fetch_artifacts.outputs.artifacts_dir }}
+      #     nexus-cli upload --repository <repository_name> *
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+      #     NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+
+      
+      # - name: Checkout Repository
+      #   uses: actions/checkout@v2
+
+      # - name: Get Latest Tag
+      #   id: get_latest_tag
+      #   run: |
+      #     git fetch --tags
+      #     latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+      #     echo "name=latest_tag=$latest_tag" >>$GITHUB_OUTPUT
+
+      # - name: Get Tag Name
+      #   id: get_tag_name
+      #   run: echo "name=tag_name=${GITHUB_REF/refs\/tags\//}" >>$GITHUB_OUTPUT
