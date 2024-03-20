@@ -10,19 +10,6 @@ on:
 jobs:
   push_to_nexus:
     runs-on: ubuntu-latest
-
-    steps:
-
-name: Clone New Release
-
-on:
-  release:
-    types: [created]
-
-jobs:
-  clone_release:
-    runs-on: ubuntu-latest
-    
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
